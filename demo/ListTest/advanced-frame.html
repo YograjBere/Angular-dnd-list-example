@@ -1,0 +1,210 @@
+<style>
+       /**
+    * For the correct positioning of the placeholder element, the dnd-list and
+    * it's children must have position: relative
+    */
+       .simpleDemo ul[dnd-list],
+       .simpleDemo ul[dnd-list] > li {
+           position: relative;
+       }
+
+       /**
+    * The dnd-list should always have a min-height,
+    * otherwise you can't drop to it once it's empty
+    */
+       .simpleDemo ul[dnd-list] {
+           min-height: 42px;
+           padding-left: 0px;
+       }
+
+           /**
+    * The dndDraggingSource class will be applied to
+    * the source element of a drag operation. It makes
+    * sense to hide it to give the user the feeling
+    * that he's actually moving it.
+    */
+           .simpleDemo ul[dnd-list] .dndDraggingSource {
+               display: none;
+           }
+
+           /**
+    * An element with .dndPlaceholder class will be
+    * added to the dnd-list while the user is dragging
+    * over it.
+    */
+           .simpleDemo ul[dnd-list] .dndPlaceholder {
+               display: block;
+               background-color: #ddd;
+               min-height: 42px;
+           }
+
+           /**
+    * The dnd-lists's child elements currently MUST have
+    * position: relative. Otherwise we can not determine
+    * whether the mouse pointer is in the upper or lower
+    * half of the element we are dragging over. In other
+    * browsers we can use event.offsetY for this.
+    */
+           .simpleDemo ul[dnd-list] li {
+               background-color: #fff;
+               border: 1px solid #ddd;
+               border-top-right-radius: 4px;
+               border-top-left-radius: 4px;
+               display: block;
+               padding: 10px 15px;
+               margin-bottom: -1px;
+           }
+
+               /**
+    * Show selected elements in green
+    */
+               .simpleDemo ul[dnd-list] li.selected {
+                   background-color: #dff0d8;
+                   color: #3c763d;
+               }
+</style>
+
+<!--dnd-allowed-types="['schedule']"-->
+<!--dnd-allowed-types="['rotation']"-->
+
+<div class="simpleDemo row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Schedules List</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul id="scheduleContainer"
+                            dnd-list="schedules"
+                            dnd-external-sources="true"
+                            dnd-drop="dropCallback(event, index, item, external, type, 'schedules')"
+                            dnd-dragstart="dragStart(event, index, item, external, type, 'schedules')"
+                            dnd-dragover="dragoverCallback(event, index, external, type, 'schedules')">
+                            <li id="schedules"
+                                ng-repeat="item in schedules"
+                                dnd-draggable="item"
+                                dnd-dragstart="dragStart(event, index, item, external, type, 'schedules')"
+                                dnd-dragover="dragoverCallback(event, index, external, 'schedules')"
+                                dnd-drop="dropCallback(event, index, item, external, type, 'schedules')"
+                                dnd-moved="list.splice($index, 1)"
+                                dnd-effect-allowed="move"
+                                dnd-selected="models.selected = item"
+                                ng-class="{'selected': models.selected === item}">
+                                {{item.label}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-1">
+                <div class="row" style="margin:20px;">
+                    <button type="button" class="btn btn-default btn-sm">
+                        <span class="glyphicon glyphicon-circle-arrow-up"></span>Up
+                    </button>
+                </div>
+                <div class="row" style="margin:20px;">
+                    <button type="button" class="btn btn-default btn-sm">
+                        <span class="glyphicon glyphicon-circle-arrow-down"></span>Down
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Rotation List</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul id="roationContainer" dnd-list="roations"
+                            dnd-external-sources="true"
+                            dnd-dragstart="dragStart(event, index, item, external, type, 'rotation')"
+                            dnd-drop="dropCallback(event, index, item, external, type, 'rotation')"
+                            dnd-dragover="dragoverCallback(event, index, external, type, 'rotation')">
+                            <li id="rotations"
+                                ng-repeat="item in roations"
+                                dnd-dragover="dragoverCallback(event, index, external, 'rotation')"
+                                dnd-dragstart="dragStart(event, index, item, external, type, 'rotation')"
+                                dnd-drop="dropCallback(event, index, item, external, type, 'rotation')"
+                                dnd-draggable="item"
+                                dnd-moved="list.splice($index, 1)"
+                                dnd-effect-allowed="move"
+                                dnd-selected="models.selected = item"
+                                ng-class="{'selected': models.selected === item}">
+                                {{item.label}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="col-md-4">
+    <ul dnd-list="schedules"
+        class="container-element box box-blue"
+        dnd-dragover="dragoverCallback(event, index, external, type)"
+        dnd-allowed-types="['Src']">
+        <li class="itemlist"
+            ng-repeat="items in schedules"
+            dnd-draggable="items">
+            {{items.label}}
+        </li>
+    </ul>
+</div>
+<div class="col-md-4">
+    <ul dnd-list="roations"
+        class="container-element box box-blue"
+        dnd-dragover="dragoverCallback(event, index, external, type)"
+        dnd-allowed-types="['Src']">
+        <li class="itemlist"
+            ng-repeat="items in roations"
+            dnd-draggable="items">
+            {{items.label}}
+        </li>
+    </ul>
+</div>
+
+
+
+
+
+
+
